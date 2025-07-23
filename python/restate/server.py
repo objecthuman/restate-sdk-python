@@ -217,11 +217,11 @@ def parse_path(request: str) -> ParsedPath:
     # anything other than invoke is 404
     return { "type": "unknown" , "service": None, "handler": None }
 
-async def lifespan_processor(scope: Scope, receive: Receive, send: Send, lifespan) -> None:
+async def lifespan_processor(scope: Scope, receive: Receive, send: Send, lifespan: LifeSpan) -> None:
     started = False
     await receive()
     try:
-        async with lifespan as maybe_state:
+        async with lifespan() as maybe_state:
             if maybe_state is not None:
                 if "state" not in scope:
                     raise RuntimeError("The server does not support state in lifespan")
